@@ -17,11 +17,16 @@ class Product(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    amount = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        unique_together = ['user', 'product']
+class Order(models.Model):
+    amount = models.IntegerField(null=True,default=1)
+    desc = models.CharField(max_length=30)
+    price = models.DecimalField(max_digits=5, decimal_places=2,null=True,default=1)
+# {'id': 9, 'amount': 2, 'desc': 'm', 'price': '2.00'}
+    # class Meta:
+    #     unique_together = ['user', 'product']
 
     def __str__(self):
         return f'{self.user.username} - {self.product.name}'

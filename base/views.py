@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Product
+from .models import Product,Order
 from rest_framework.views import APIView
 from rest_framework import status
 
@@ -15,12 +15,48 @@ from rest_framework import generics
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'product', 'quantity', 'created_at']
+        fields =  ['__all__']#, 'user', 'product', 'quantity', 'created_at']
+
+
+class CartItemSerializer(serializers.Serializer):
+    class Meta:
+        model = Order
+        fields =  ['__all__']
+    def create(self, validated_data):
+        return Order.objects.create(**validated_data)
+        # id = serializers.IntegerField()
+        # amount = serializers.IntegerField()
+        # desc = serializers.CharField()
+        # price = serializers.DecimalField(max_digits=5, decimal_places=2)
+
+
+class CartView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        cart_items = request.data
+        print(cart_items)
+        serializer = CartItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            cart_items = serializer.save()
+        #     # Process the cart items as needed
+        #     # ...
+            return Response("Cart items received and processed successfully.")
+        else:
+            return Response(serializer.errors, status=400)
 
 
 class CartListCreateView(generics.ListCreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
+
+
+@api_view(['post'])
+@permission_classes([IsAuthenticated])
+def buy(req):
+    cart_items = req.data
+    print(cart_items)
+    return Response("about")
 
 
 @api_view(['GET'])
