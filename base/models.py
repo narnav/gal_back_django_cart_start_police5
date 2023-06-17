@@ -21,9 +21,9 @@ class Cart(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 class Order(models.Model):
-    amount = models.IntegerField(null=True,default=1)
+    amount = models.IntegerField(null=True)
     desc = models.CharField(max_length=30)
-    price = models.DecimalField(max_digits=5, decimal_places=2,null=True,default=1)
+    price = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 # {'id': 9, 'amount': 2, 'desc': 'm', 'price': '2.00'}
     # class Meta:
     #     unique_together = ['user', 'product']

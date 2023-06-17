@@ -18,17 +18,13 @@ class CartSerializer(serializers.ModelSerializer):
         fields =  ['__all__']#, 'user', 'product', 'quantity', 'created_at']
 
 
-class CartItemSerializer(serializers.Serializer):
+class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields =  ['__all__']
+        fields =  ['amount', 'desc', 'price']
     def create(self, validated_data):
         return Order.objects.create(**validated_data)
-        # id = serializers.IntegerField()
-        # amount = serializers.IntegerField()
-        # desc = serializers.CharField()
-        # price = serializers.DecimalField(max_digits=5, decimal_places=2)
-
+       
 
 class CartView(APIView):
     
