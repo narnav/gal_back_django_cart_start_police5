@@ -21,6 +21,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 class Order(models.Model):
+    user =models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     amount = models.IntegerField(null=True)
     desc = models.CharField(max_length=30)
     price = models.DecimalField(max_digits=5, decimal_places=2,null=True)

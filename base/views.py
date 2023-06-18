@@ -23,8 +23,9 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = Order
         fields =  ['amount', 'desc', 'price']
     def create(self, validated_data):
-        return Order.objects.create(**validated_data)
-       
+        # return Order.objects.create(**validated_data)
+        user = self.context['user']
+        return Order.objects.create(**validated_data,user=user)
 
 class CartView(APIView):
     
@@ -32,7 +33,7 @@ class CartView(APIView):
     def post(self, request):
         cart_items = request.data
         print(cart_items)
-        serializer = CartItemSerializer(data=request.data, many=True)
+        serializer = CartItemSerializer(data=request.data, many=True, context={'user': request.user})
         if serializer.is_valid():
             cart_items = serializer.save()
         #     # Process the cart items as needed
